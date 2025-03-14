@@ -1,0 +1,48 @@
+// Jenkinsfile
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("your-dockerhub-username/ai-service:latest")
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Deploy steps, e.g., update Kubernetes deployment or trigger Terraform apply
+                echo 'Deploying application...'
+            }
+        }
+    }
+}
