@@ -1,0 +1,16 @@
+# Dockerfile for Node.js Express App
+FROM node:16-alpine
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Copy package.json and install dependencies
+COPY package*.json ./
+RUN npm install --production
+
+# Bundle app source code
+COPY . .
+
+# Expose port and run the app
+EXPOSE 3000
+CMD [ "node", "index.js" ]
