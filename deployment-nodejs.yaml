@@ -1,0 +1,23 @@
+# k8s/deployment-nodejs.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+      - name: nodejs-app
+        image: your-dockerhub-username/nodejs-app:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
